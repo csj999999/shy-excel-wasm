@@ -1,0 +1,31 @@
+{
+  "name": "shy-excel-wasm",
+  "version": "0.0.1",
+  "description": "A pure WebAssembly / Javascript port of Go Excelize library",
+  "main": "main.js",
+  "scripts": {
+    "dev": "rollup -c -w",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/buzzxu/shy-excel-wasm.git"
+  },
+  "keywords": [
+    "excel",
+    "wasm",
+    "golang"
+  ],
+  "author": "downloadxu",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/buzzxu/shy-excel-wasm/issues"
+  },
+  "homepage": "https://github.com/buzzxu/shy-excel-wasm#readme",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.4",
+    "@rollup/plugin-node-resolve": "^15.2.1",
+    "@rollup/plugin-terser": "^0.4.3",
+    "rollup": "^3.29.4"
+  }
+}

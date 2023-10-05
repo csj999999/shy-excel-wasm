@@ -1,4 +1,6 @@
+main.js
 Makefile
 package-lock.json
+.idea/
 node_modules/
 dist/
