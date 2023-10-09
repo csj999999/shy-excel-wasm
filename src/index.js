@@ -557,8 +557,16 @@
     }
 })();
 
-import pako from 'pako';
 
+export async function init(wasmPath) {
+    const go = new Go();
+    window.shyexcel = {};
+    const result = await WebAssembly.instantiateStreaming(fetch(wasmPath), go.importObject);
+    go.run(result.instance);
+    return shyexcel;
+};
+
+/*
 export async function init(wasmPath) {
     const go = new Go();
     var buffer;
@@ -576,4 +584,4 @@ export async function init(wasmPath) {
     const result = await WebAssembly.instantiate(buffer, go.importObject);
     go.run(result.instance);
     return shyexcel;
-};
+};*/

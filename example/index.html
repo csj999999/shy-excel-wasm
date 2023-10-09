@@ -11,11 +11,14 @@
 </div>
 <script>
     function download() {
-        shyexcelWASM.init("https://file.xw-jd.com/static/shy-excel/shyexcel.wasm.gz")
+        shyexcelWASM.init("https://xwjd.oss-cn-shanghai.aliyuncs.com/static/shy-excel/shyexcel.wasm")
             .then((shyexcel)=>{
                 console.info(shyexcel)
-                const f = shyexcel.NewHTTP('https://file.xw-jd.com/static/shy-excel/example.json');
-                console.info(f)
+                fetch('./static/example.json').then((response) => response.json()).then((json) => {
+                    const f = shyexcel.NewTable(json);
+                });
+                // const f = shyexcel.NewHTTP('https://file.xw-jd.com/static/shy-excel/example.json');
+                // console.info(f)
             });
     }
 </script>
