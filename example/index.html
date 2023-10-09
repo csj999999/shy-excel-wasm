@@ -14,7 +14,8 @@
         shyexcelWASM.init("https://file.xw-jd.com/static/shy-excel/shyexcel.wasm.gz")
             .then((shyexcel)=>{
                 console.info(shyexcel)
-                alert('---');
+                const f = shyexcel.NewHTTP('https://file.xw-jd.com/static/shy-excel/example.json');
+                console.info(f)
             });
     }
 </script>
