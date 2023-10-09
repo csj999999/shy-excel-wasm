@@ -1,18 +1,9 @@
 package main
 
-import (
-	"encoding/json"
-	"fmt"
-	"os"
-	"testing"
-)
+import "testing"
+import "syscall/js"
 
-func TestParser(t *testing.T) {
-	bytes, err := os.ReadFile("./example.json")
-	if err != nil {
-		panic(err)
-	}
-	var excel = &Excel{}
-	json.Unmarshal(bytes, excel)
-	fmt.Printf("-->", excel.Header.Title)
+func TestRegInteropFunc(t *testing.T) {
+	js.Global().Set("shyexcel", map[string]interface{}{})
+	regFuncs()
 }
