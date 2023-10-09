@@ -3,8 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="static/index.js"></script>
 </head>
 <body>
-
+<div>
+    <button onclick="download()">下载</button>
+</div>
+<script>
+    function download() {
+        shyexcelWASM.init("https://file.xw-jd.com/static/shy-excel/shyexcel.wasm.gz")
+            .then((shyexcel)=>{
+                console.info(shyexcel)
+                alert('---');
+            });
+    }
+</script>
 </body>
 </html>

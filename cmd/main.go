@@ -5,6 +5,7 @@ import (
 	"errors"
 	shyexcel "github.com/buzzxu/shy-excel"
 	"github.com/xuri/excelize/v2"
+	"net/http"
 	"reflect"
 	"syscall/js"
 )
@@ -152,6 +153,7 @@ func regFuncs() {
 
 	for name, impl := range map[string]func(this js.Value, args []js.Value) interface{}{
 		"NewTable": NewTable,
+		"NewHTTP":  NewHTTP,
 	} {
 		js.Global().Get("shyexcel").Set(name, js.FuncOf(impl))
 	}
@@ -176,6 +178,47 @@ func NewTable(this js.Value, args []js.Value) interface{} {
 		return regInteropFunc(shyexcel.NewTable(&table), fn)
 	}
 	fn["error"] = ""
+	return js.ValueOf(fn)
+}
+
+func NewHTTP(this js.Value, args []js.Value) interface{} {
+	fn := map[string]interface{}{"error": nil}
+	fn["error"] = nil
+	if err := prepareArgs(args, []argsRule{
+		{types: []js.Type{js.TypeObject}, opts: true},
+	}); err != nil {
+		fn["error"] = err.Error()
+		return js.ValueOf(fn)
+	}
+	if len(args) == 1 {
+		table, err := shyexcel.NewHTTP(args[0].String(), "GET", nil)
+		if err != nil {
+			fn["error"] = err.Error()
+			return js.ValueOf(fn)
+		}
+		return regInteropFunc(table, fn)
+	} else if len(args) == 2 {
+		table, err := shyexcel.NewHTTP(args[0].String(), args[1].String(), nil)
+		if err != nil {
+			fn["error"] = err.Error()
+			return js.ValueOf(fn)
+		}
+		return regInteropFunc(table, fn)
+	} else if len(args) == 3 {
+		goVal, err := jsValueToGo(args[1], reflect.TypeOf(map[string]string{}))
+		headers := goVal.Elem().Interface().(map[string]string)
+		table, err := shyexcel.NewHTTP(args[0].String(), args[1].String(), func(header http.Header) {
+			for k, v := range headers {
+				header.Set(k, v)
+			}
+		})
+		if err != nil {
+			fn["error"] = err.Error()
+			return js.ValueOf(fn)
+		}
+		return regInteropFunc(table, fn)
+	}
+	fn["error"] = "参数错误"
 	return js.ValueOf(fn)
 }
 

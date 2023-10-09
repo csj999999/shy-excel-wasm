@@ -12,7 +12,7 @@ export default [
             file: pkg.exports.script,
             format: 'iife',
             generatedCode: 'es2015',
-            name: 'shyexcel',
+            name: 'shyexcelWASM',
             sourcemap: false,
         },
         plugins: [
