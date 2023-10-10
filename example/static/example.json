@@ -1,78 +1,80 @@
-[
-  {
-    "header": {
-      "title": "订单列表",
-      "freezeCol": 2,
-      "font_family": "仿宋",
-      "font_title_size" : 14,
-      "font_header_size": 12,
-      "font_column_size": 12,
-      "columns": [
-        {
-          "name": "index",
-          "title": "序号",
-          "type": "index"
-        },
-        {
-          "name": "orderNumber",
-          "title": "订单编号",
-          "type": "string",
-          "width": 15
-        },
-        {
-          "name": "amount",
-          "title": "金额",
-          "type": "numeric"
-        },
-        {
-          "name": "number",
-          "title": "数量",
-          "type": "numeric"
-        },
-        {
-          "name": "productName",
-          "title": "产品名称",
-          "type": "string"
-        },
-        {
-          "name": "image",
-          "title": "产品图片",
-          "type": "hyperLink"
-        },
-        {
-          "name": "price",
-          "title": "单价",
-          "type": "numeric",
-          "precision": 2
+{
+  "sheets": [
+    {
+      "header": {
+        "title": "订单列表",
+        "freezeCol": 2,
+        "font_family": "仿宋",
+        "font_title_size" : 14,
+        "font_header_size": 12,
+        "font_column_size": 12,
+        "columns": [
+          {
+            "name": "index",
+            "title": "序号",
+            "type": "index"
+          },
+          {
+            "name": "orderNumber",
+            "title": "订单编号",
+            "type": "string",
+            "width": 15
+          },
+          {
+            "name": "amount",
+            "title": "金额",
+            "type": "numeric"
+          },
+          {
+            "name": "number",
+            "title": "数量",
+            "type": "numeric"
+          },
+          {
+            "name": "productName",
+            "title": "产品名称",
+            "type": "string"
+          },
+          {
+            "name": "image",
+            "title": "产品图片",
+            "type": "hyperLink"
+          },
+          {
+            "name": "price",
+            "title": "单价",
+            "type": "numeric",
+            "precision": 2
+          }
+        ],
+        "style": {
+
         }
-      ],
-      "style": {
-
-      }
-    },
-    "layout": {
-
-    },
-    "margins": {
-
-    },
-    "data": [
-      {
-        "orderNumber": "S12323123",
-        "amount": 23.4123,
-        "number": 2,
-        "productName": "白板",
-        "image": "https://mgjobs.mxbc.net/kf@278725@4Sr6Nd@606@kf31.jpg",
-        "price": 12.2
       },
-      {
-        "orderNumber": "S12323153",
-        "amount": 107.2143,
-        "number": 2,
-        "productName": "灯箱",
-        "image": "https://mgjobs.mxbc.net/kf@278725@4Sr6Nd@606@kf31.jpg",
-        "price": 100.2
-      }
-    ]
-  }
-]
+      "layout": {
+
+      },
+      "margins": {
+
+      },
+      "data": [
+        {
+          "orderNumber": "S12323123",
+          "amount": 23.4123,
+          "number": 2,
+          "productName": "白板",
+          "image": "https://mgjobs.mxbc.net/kf@278725@4Sr6Nd@606@kf31.jpg",
+          "price": 12.2
+        },
+        {
+          "orderNumber": "S12323153",
+          "amount": 107.2143,
+          "number": 2,
+          "productName": "灯箱",
+          "image": "https://mgjobs.mxbc.net/kf@278725@4Sr6Nd@606@kf31.jpg",
+          "price": 100.2
+        }
+      ]
+    }
+  ]
+}

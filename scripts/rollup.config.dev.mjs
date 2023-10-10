@@ -20,7 +20,7 @@ export default [
                 moduleDirectories: ['node_modules']
             }),
             serve({
-                open: true,
+                open: false,
                 contentBase:['example'],
                 port: 3000
             })

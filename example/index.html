@@ -7,18 +7,30 @@
 </head>
 <body>
 <div>
-    <button onclick="download()">下载</button>
+    <button onclick="download()">下载1</button>
 </div>
 <script>
     function download() {
-        shyexcelWASM.init("https://xwjd.oss-cn-shanghai.aliyuncs.com/static/shy-excel/shyexcel.wasm")
+        shyexcelWASM.init("./static/shyexcel.wasm")
             .then((shyexcel)=>{
                 console.info(shyexcel)
                 fetch('./static/example.json').then((response) => response.json()).then((json) => {
                     const f = shyexcel.NewTable(json);
+                    const { buffer, error } = f.WriteToBuffer();
+                    if (error) {
+                        console.log(error);
+                        return;
+                    }
+                    const link = document.createElement('a');
+                    link.download = 'Book1.xlsx';
+                    link.href = URL.createObjectURL(
+                        new Blob([buffer], {
+                            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                        })
+                    );
+                    link.click();
                 });
-                // const f = shyexcel.NewHTTP('https://file.xw-jd.com/static/shy-excel/example.json');
-                // console.info(f)
+
             });
     }
 </script>

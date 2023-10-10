@@ -2,9 +2,13 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"errors"
+	"fmt"
 	shyexcel "github.com/buzzxu/shy-excel"
+	jsoniter "github.com/json-iterator/go"
 	"github.com/xuri/excelize/v2"
+	"io"
 	"net/http"
 	"reflect"
 	"syscall/js"
@@ -33,6 +37,7 @@ var (
 		reflect.Float32: true,
 		reflect.Float64: true,
 		reflect.Map:     true,
+		reflect.Array:   true,
 		reflect.String:  true,
 	}
 	// jsToBaseGoTypeFuncs defined functions mapping for JavaScript to Go basic
@@ -150,7 +155,6 @@ func main() {
 }
 
 func regFuncs() {
-
 	for name, impl := range map[string]func(this js.Value, args []js.Value) interface{}{
 		"NewTable": NewTable,
 		"NewHTTP":  NewHTTP,
@@ -162,64 +166,170 @@ func regFuncs() {
 func NewTable(this js.Value, args []js.Value) interface{} {
 	fn := map[string]interface{}{"error": nil}
 	fn["error"] = nil
-	if err := prepareArgs(args, []argsRule{
-		{types: []js.Type{js.TypeObject}, opts: true},
-	}); err != nil {
-		fn["error"] = err.Error()
-		return js.ValueOf(fn)
-	}
+
 	if len(args) == 1 {
-		goVal, err := jsValueToGo(args[0], reflect.TypeOf(shyexcel.Table{}))
+		jsonStr := js.Global().Get("JSON").Call("stringify", args[0]).String()
+		var json = jsoniter.ConfigCompatibleWithStandardLibrary
+		var table = &shyexcel.Table{}
+		err := json.Unmarshal([]byte(jsonStr), table)
 		if err != nil {
-			fn["error"] = err.Error()
-			return js.ValueOf(fn)
+			fmt.Println("Error: " + err.Error())
+			return nil
 		}
-		table := goVal.Elem().Interface().(shyexcel.Table)
-		return regInteropFunc(shyexcel.NewTable(&table), fn)
+		return regInteropFunc(shyexcel.NewTable(table), fn)
 	}
-	fn["error"] = ""
+	fn["error"] = "data is null"
 	return js.ValueOf(fn)
 }
 
 func NewHTTP(this js.Value, args []js.Value) interface{} {
 	fn := map[string]interface{}{"error": nil}
-	fn["error"] = nil
 	if err := prepareArgs(args, []argsRule{
+		{types: []js.Type{js.TypeString}},
 		{types: []js.Type{js.TypeObject}, opts: true},
 	}); err != nil {
 		fn["error"] = err.Error()
 		return js.ValueOf(fn)
 	}
-	if len(args) == 1 {
-		table, err := shyexcel.NewHTTP(args[0].String(), "GET", nil)
-		if err != nil {
-			fn["error"] = err.Error()
-			return js.ValueOf(fn)
-		}
-		return regInteropFunc(table, fn)
-	} else if len(args) == 2 {
-		table, err := shyexcel.NewHTTP(args[0].String(), args[1].String(), nil)
-		if err != nil {
-			fn["error"] = err.Error()
-			return js.ValueOf(fn)
-		}
-		return regInteropFunc(table, fn)
-	} else if len(args) == 3 {
+	lenArgs := len(args)
+	if lenArgs == 0 {
+		fn["error"] = "请传入参数,url必填"
+		return js.ValueOf(fn)
+	}
+	var url = args[0].String()
+	var headers map[string]string
+	if lenArgs == 2 {
 		goVal, err := jsValueToGo(args[1], reflect.TypeOf(map[string]string{}))
-		headers := goVal.Elem().Interface().(map[string]string)
-		table, err := shyexcel.NewHTTP(args[0].String(), args[1].String(), func(header http.Header) {
-			for k, v := range headers {
-				header.Set(k, v)
-			}
+		if err != nil {
+			fn["error"] = err.Error()
+			return js.ValueOf(fn)
+		}
+		headers = goVal.Elem().Interface().(map[string]string)
+	}
+
+	table, err := newHttp(url, headers)
+	if err != nil {
+		fn["error"] = err.Error()
+		return js.ValueOf(fn)
+	}
+	return regInteropFunc(table, fn)
+}
+
+func newHttp(url string, headers map[string]string) (*excelize.File, error) {
+	done := make(chan string)
+	errc := make(chan string, 1)
+	go func() {
+		options := js.Global().Get("Object").New()
+		options.Set("method", "GET")
+		//options.Set("body", JSON.stringify(someData))  // someData 是你要发送的数据
+		if headers != nil {
+			options.Set("headers", headers)
+		}
+		promise := js.Global().Get("fetch").Invoke(url, options)
+		promise.Call("then", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			response := args[0]
+			return response.Invoke().Call("then", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+				body := args[0]
+				done <- body.String()
+				return nil
+			})).Call("catch", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+				err := args[0]
+				errc <- err.Get("message").String()
+				return nil
+			}))
+		}))
+	}()
+	select {
+	case result := <-done:
+		// 处理结果
+		var json = jsoniter.ConfigCompatibleWithStandardLibrary
+		var table = &shyexcel.Table{}
+		err := json.Unmarshal([]byte(result), table)
+		if err != nil {
+			return nil, err
+		}
+		return shyexcel.NewTable(table), nil
+	case err := <-errc:
+		return nil, errors.New(err)
+	}
+}
+func WriteToBuffer(f *excelize.File) func(this js.Value, args []js.Value) interface{} {
+	return func(this js.Value, args []js.Value) interface{} {
+		ret := map[string]interface{}{"buffer": js.ValueOf([]interface{}{}), "error": nil}
+		err := prepareArgs(args, []argsRule{
+			{types: []js.Type{js.TypeObject}, opts: true},
 		})
 		if err != nil {
-			fn["error"] = err.Error()
-			return js.ValueOf(fn)
+			ret["error"] = err.Error()
+			return js.ValueOf(ret)
 		}
-		return regInteropFunc(table, fn)
+		var opts excelize.Options
+		if len(args) == 1 {
+			goVal, err := jsValueToGo(args[0], reflect.TypeOf(excelize.Options{}))
+			if err != nil {
+				ret["error"] = err.Error()
+				return js.ValueOf(ret)
+			}
+			opts = goVal.Elem().Interface().(excelize.Options)
+		}
+		buf := new(bytes.Buffer)
+		if err := f.Write(buf, opts); err != nil {
+			ret["error"] = err.Error()
+			return js.ValueOf(ret)
+		}
+		src := buf.Bytes()
+		dst := js.Global().Get("Uint8Array").New(len(src))
+		js.CopyBytesToJS(dst, src)
+		ret["buffer"] = dst
+		return js.ValueOf(ret)
 	}
-	fn["error"] = "参数错误"
-	return js.ValueOf(fn)
+}
+
+func httpReq(url, method string, funcHeader func(header http.Header)) (*shyexcel.Table, error) {
+	req, err := http.NewRequestWithContext(context.Background(), method, url, nil)
+	if err != nil {
+		return nil, err
+	}
+	if funcHeader != nil {
+		funcHeader(req.Header)
+	}
+
+	c1 := make(chan shyexcel.Table, 1)
+	errc := make(chan error, 1) // 创建一个错误 channel
+	go func() {
+		resp, err := http.DefaultClient.Do(req)
+		if err != nil {
+			errc <- err // 发送错误到错误 channel
+			return
+		}
+		if resp != nil && resp.Body != nil {
+			defer resp.Body.Close()
+		}
+		if resp.StatusCode == 200 {
+			b, err := io.ReadAll(resp.Body)
+			if err != nil {
+				errc <- err // 发送错误到错误 channel
+				return
+			}
+			var json = jsoniter.ConfigCompatibleWithStandardLibrary
+			var table = &shyexcel.Table{}
+			err = json.Unmarshal(b, table)
+			if err != nil {
+				errc <- err // 发送错误到错误 channel
+				return
+			}
+			c1 <- *table
+		} else {
+			errc <- fmt.Errorf("unexpected status code: %d", resp.StatusCode) // 发送错误到错误 channel
+		}
+	}()
+	select {
+	case result := <-c1:
+		// 处理结果
+		return &result, nil
+	case err := <-errc:
+		return nil, err
+	}
 }
 
 func regInteropFunc(f *excelize.File, fn map[string]interface{}) interface{} {
@@ -395,34 +505,153 @@ func jsValueToGo(jsVal js.Value, goType reflect.Type) (reflect.Value, error) {
 	return result, nil
 }
 
-func WriteToBuffer(f *excelize.File) func(this js.Value, args []js.Value) interface{} {
-	return func(this js.Value, args []js.Value) interface{} {
-		ret := map[string]interface{}{"buffer": js.ValueOf([]interface{}{}), "error": nil}
-		err := prepareArgs(args, []argsRule{
-			{types: []js.Type{js.TypeObject}, opts: true},
-		})
-		if err != nil {
-			ret["error"] = err.Error()
-			return js.ValueOf(ret)
-		}
-		var opts excelize.Options
-		if len(args) == 1 {
-			goVal, err := jsValueToGo(args[0], reflect.TypeOf(excelize.Options{}))
-			if err != nil {
-				ret["error"] = err.Error()
-				return js.ValueOf(ret)
-			}
-			opts = goVal.Elem().Interface().(excelize.Options)
-		}
-		buf := new(bytes.Buffer)
-		if err := f.Write(buf, opts); err != nil {
-			ret["error"] = err.Error()
-			return js.ValueOf(ret)
-		}
-		src := buf.Bytes()
-		dst := js.Global().Get("Uint8Array").New(len(src))
-		js.CopyBytesToJS(dst, src)
-		ret["buffer"] = dst
-		return js.ValueOf(ret)
+// goBaseTypeToJS convert Go basic data type value to JavaScript variable.
+func goBaseTypeToJS(goVal reflect.Value, kind reflect.Kind) (interface{}, error) {
+	fn, ok := goBaseValueToJSFuncs[kind]
+	if !ok {
+		return nil, errArgType
 	}
+	return fn(goVal, kind)
+}
+
+// goValueToJS convert Go variable to JavaScript object base on the given Go
+// structure types, this function extract each fields of the structure from
+// structure variable recursively.
+func goValueToJS(goVal reflect.Value, goType reflect.Type) (map[string]interface{}, error) {
+	result := map[string]interface{}{}
+	s := reflect.New(goType).Elem()
+	for i := 0; i < s.NumField(); i++ {
+		field := s.Type().Field(i)
+		if goBaseTypes[s.Field(i).Kind()] {
+			v, err := goBaseTypeToJS(goVal.Field(i), s.Field(i).Kind())
+			if err != nil {
+				return nil, err
+			}
+			result[field.Name] = v
+			continue
+		}
+		switch s.Field(i).Kind() {
+		case reflect.Ptr:
+			// Pointer of the Go data type, for example: *excelize.Options or *string
+			ptrType := field.Type.Elem()
+			if !goBaseTypes[ptrType.Kind()] {
+				// Pointer of the Go struct, for example: *excelize.Options
+				goStructVal := goVal.Field(i)
+				if !goStructVal.IsNil() {
+					v, err := goValueToJS(goStructVal.Elem(), ptrType)
+					if err != nil {
+						return nil, err
+					}
+					result[field.Name] = v
+				}
+			}
+			if goBaseTypes[ptrType.Kind()] {
+				// Pointer of the Go basic data type, for example: *string
+				goBaseVal := goVal.Field(i)
+				if !goBaseVal.IsNil() {
+					v, err := goBaseTypeToJS(goBaseVal.Elem(), ptrType.Kind())
+					if err != nil {
+						return nil, err
+					}
+					result[field.Name] = v
+				}
+			}
+		case reflect.Struct:
+			// The Go struct, for example: excelize.Options, convert sub fields recursively
+			structType := field.Type
+			goStructVal := goVal.Field(i)
+			if !goStructVal.IsZero() {
+				v, err := goValueToJS(goStructVal, structType)
+				if err != nil {
+					return nil, err
+				}
+				result[field.Name] = v
+			}
+		case reflect.Slice:
+			// The Go data type array, for example:
+			// []*excelize.Options, []excelize.Options, []string, []*string
+			ele := field.Type.Elem()
+			goSlice := goVal.Field(i)
+			for s := 0; s < goSlice.Len(); s++ {
+				if ele.Kind() == reflect.Ptr {
+					// Pointer array of the Go data type, for example: []*excelize.Options or []*string
+					subEle := ele.Elem()
+					if !goBaseTypes[subEle.Kind()] {
+						// Pointer of the Go struct, for example: *excelize.Options
+						goStructVal := goSlice.Index(s)
+						if !goStructVal.IsNil() {
+							v, err := goValueToJS(goStructVal.Elem(), subEle)
+							if err != nil {
+								return nil, err
+							}
+							if _, ok := result[field.Name]; !ok {
+								result[field.Name] = []interface{}{}
+							}
+							x := result[field.Name].([]interface{})
+							x = append(x, v)
+							result[field.Name] = x
+						}
+					}
+					if goBaseTypes[subEle.Kind()] {
+						// Pointer of the Go basic data type, for example: *string
+						goBaseVal := goSlice.Index(s)
+						if !goBaseVal.IsNil() {
+							v, err := goBaseTypeToJS(goBaseVal.Elem(), subEle.Kind())
+							if err != nil {
+								return nil, err
+							}
+							if _, ok := result[field.Name]; !ok {
+								result[field.Name] = []interface{}{}
+							}
+							x := result[field.Name].([]interface{})
+							x = append(x, v)
+							result[field.Name] = x
+						}
+					}
+				} else {
+					// The Go data type array, for example: []excelize.Options or []string
+					subEle := ele
+					if !goBaseTypes[subEle.Kind()] {
+						// Value of the Go struct, for example: excelize.Options
+						goStructVal := goSlice.Index(s)
+						if !goStructVal.IsZero() {
+							v, err := goValueToJS(goStructVal, subEle)
+							if err != nil {
+								return nil, err
+							}
+							if _, ok := result[field.Name]; !ok {
+								result[field.Name] = []interface{}{}
+							}
+							x := result[field.Name].([]interface{})
+							x = append(x, v)
+							result[field.Name] = x
+						}
+					}
+					if goBaseTypes[subEle.Kind()] {
+						// Value of the Go basic data type, for example: string
+						goBaseVal := goSlice.Index(s)
+						if !goBaseVal.IsZero() {
+							if subEle.Kind() == reflect.Uint8 { // []byte
+								dst := js.Global().Get("Uint8Array").New(goSlice.Len())
+								js.CopyBytesToJS(dst, goSlice.Bytes())
+								result[field.Name] = dst
+								break
+							}
+							v, err := goBaseTypeToJS(goBaseVal, subEle.Kind())
+							if err != nil {
+								return nil, err
+							}
+							if _, ok := result[field.Name]; !ok {
+								result[field.Name] = []interface{}{}
+							}
+							x := result[field.Name].([]interface{})
+							x = append(x, v)
+							result[field.Name] = x
+						}
+					}
+				}
+			}
+		}
+	}
+	return result, nil
 }
