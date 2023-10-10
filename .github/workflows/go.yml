@@ -53,3 +53,6 @@ jobs:
         node ./node_modules/.bin/rollup -c scripts/rollup.config.prod.mjs
         cp README.md ./dist
         cp src/package.json ./dist
+    - run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
