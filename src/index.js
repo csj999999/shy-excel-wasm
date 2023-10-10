@@ -566,6 +566,7 @@
     return shyexcel;
 };*/
 
+import pako from 'pako';
 export async function init(wasmPath) {
     const go = new Go();
     var buffer;

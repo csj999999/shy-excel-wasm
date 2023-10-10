@@ -11,7 +11,7 @@
 </div>
 <script>
     function download() {
-        shyexcelWASM.init("./static/shyexcel.wasm")
+        shyexcelWASM.init("./static/shyexcel.wasm.gz")
             .then((shyexcel)=>{
                 console.info(shyexcel)
                 fetch('./static/example.json').then((response) => response.json()).then((json) => {
