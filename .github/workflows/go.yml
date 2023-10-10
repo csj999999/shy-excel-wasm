@@ -55,7 +55,9 @@ jobs:
         node ./node_modules/.bin/rollup -c scripts/rollup.config.prod.mjs
         cp README.md ./dist
         cp src/package.json ./dist
+
     - name: GitHub NPM Publish
+      uses: actions/setup-node@v3
       with:
         node-version: '20.x'
         registry-url: 'https://npm.pkg.github.com'
