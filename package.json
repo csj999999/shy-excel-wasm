@@ -39,8 +39,5 @@
     "rollup": "^3.29.4",
     "rollup-plugin-polyfill-node": "^0.12.0",
     "rollup-plugin-serve": "^2.0.2"
-  },
-  "dependencies": {
-    "shy-excel-wasm": "^0.0.3"
   }
 }
