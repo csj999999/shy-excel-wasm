@@ -21,7 +21,8 @@ export default [
             }),
             serve({
                 open: false,
-                contentBase:['example'],
+                // contentBase:['example'],
+                openPage: '/example/index.html',
                 port: 3000
             })
         ]

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script src="static/index.js"></script>
+    <script src="../dist/index.js"></script>
 </head>
 <body>
 <div>
@@ -11,27 +11,64 @@
 </div>
 <script>
     function download() {
-        shyexcelWASM.init("./static/shyexcel.wasm.gz")
-            .then((shyexcel)=>{
-                console.info(shyexcel)
-                fetch('./static/example.json').then((response) => response.json()).then((json) => {
-                    const f = shyexcel.NewTable(json);
-                    const { buffer, error } = f.WriteToBuffer();
-                    if (error) {
-                        console.log(error);
-                        return;
-                    }
-                    const link = document.createElement('a');
-                    link.download = 'Book1.xlsx';
-                    link.href = URL.createObjectURL(
-                        new Blob([buffer], {
-                            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                        })
-                    );
-                    link.click();
-                });
+        shyexcelWASM.NewTable('Book1.xlsx','./static/example.json').export();
 
-            });
+    }
+    function a(){
+        //简单导出
+        shyexcelWASM.NewTable('./static/example.json').export()
+        //另一种形式
+        var shyexcelOpts = {
+            method:'GET',
+            responseType: 'json',  //默认json 可选属性，非必填
+            timeout: 1000*10  //请求超时时间
+        };
+        shyexcelWASM.NewTable('./static/example.json',shyexcelOpts).export();
+        //自定义header
+        var shyexcelOpts = {
+            method:'GET',
+            responseType: 'json',  //默认json 可选属性，非必填
+            headers: {
+                'Content-Type':'application/json'
+            }
+        };
+        shyexcelWASM.NewTable('./static/example.json',shyexcelOpts).export();
+        //POST 请求带参数
+        var shyexcelOpts = {
+            method:'POST',
+            responseType: 'json',
+            data: {
+                keywords: '关键词'
+            }
+        };
+        shyexcelWASM.NewTable('./static/example.json',shyexcelOpts).export();
+        //自定义提示语
+        var shyexcelOpts = {
+            method:'POST',
+            responseType: 'json',
+            tips: {
+                normal:'正在生成中,请勿刷新页面',
+                error:'生成失败,请点击查看详情',
+                success: '文件生成成功,请及时下载'
+            },
+        };
+        shyexcelWASM.NewTable('./static/example.json',shyexcelOpts).export();
+        //接口数据自定义 异常处理
+        var shyexcelOpts = {
+            method:'GET',
+            responseType: 'json',  //默认json 可选属性，非必填
+            timeout: 1000*10,  //请求超时时间
+            success: (response)=>{
+              return  response.data;
+            },
+            error: (response)=>{
+               if (response.status === 500){
+                   return response.data.message
+               }
+               return "接口发生异常"
+            }
+        };
+        shyexcelWASM.NewTable('./static/example.json',shyexcelOpts).export()
     }
 </script>
 </body>

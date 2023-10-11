@@ -567,7 +567,98 @@
 };*/
 
 import pako from 'pako';
-export async function init(wasmPath) {
+import {common_extend,random} from "./util.js";
+
+const defaultSetting = {
+    method:'GET',
+    responseType: 'json',  //默认json 可选属性，非必填
+    wasm: './static/shyexcel.wasm.gz',   //默认，可选，非必填
+    timeout: 1000*10,  //请求超时时间
+    reqData: null,
+    headers: null,
+    tips: {
+        normal:'正在生成中,请勿刷新页面',
+        error:'生成失败,请点击查看详情',
+        success: '文件生成成功,请及时下载'
+    },
+    data: (response)=>{
+        return response;
+    },
+    error: (response)=>{
+        if (response.status === 500){
+            return response.message
+        }
+        return "接口发生异常"
+    }
+};
+
+
+
+
+function NewTable(fileName,url,setting){
+    let _setting = common_extend(defaultSetting, setting);
+    if (url === null || url === '') {
+        console.error("url is null or '' ")
+        return ;
+    }
+    return {
+        export: function (){
+            //TODO 全局展示弹出层
+            init(_setting.wasm).then((shyexcel)=>{
+
+                //处理数据 http 请求
+                let fetchOptions = {
+                    method: _setting.method,
+                };
+                if (_setting.headers !== null) {
+                    fetchOptions.headers = _setting.headers;
+                }
+                if ((_setting.method === 'POST' || _setting.method === 'post')  && _setting.reqData !== null) {
+                    fetchOptions.body = _setting.reqData;
+                }
+                //TODO protubuf暂时不支持
+                let data = _setting.responseType === 'protubuf' ? null : fetch(url,fetchOptions).then(response=> response.json());
+
+                //接口返回的数据处理
+                data.then(data => _setting.data(data))
+                    .then(data=>{
+                        const f = shyexcel.NewTable(data);
+                        const { buffer, error } = f.WriteToBuffer();
+                        if (error) {
+                            //处理异常
+                            _setting.error({
+                                message : error.message
+                            })
+                            return;
+                        }
+                        //TODO excel生成成功，处理buffer
+                        const link = document.createElement('a');
+                        link.download = fileName === null || fileName === '' ? random()+".xlsx" : fileName;
+                        link.href = URL.createObjectURL(
+                            new Blob([buffer], {
+                                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            })
+                        );
+                        link.click();
+                    })
+                    .catch((error) =>{
+                        //处理异常
+                        _setting.error({
+
+                        })
+                    });
+
+            })
+        }
+    };
+}
+
+
+
+
+
+
+async function init(wasmPath) {
     const go = new Go();
     var buffer;
     if (typeof window === 'undefined') {
@@ -584,4 +675,11 @@ export async function init(wasmPath) {
     const result = await WebAssembly.instantiate(buffer, go.importObject);
     go.run(result.instance);
     return shyexcel;
-};
+}
+
+
+
+export {
+    init,
+    NewTable
+}
