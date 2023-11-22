@@ -40,7 +40,7 @@ jobs:
       run: |
         cd cmd
         GOOS=js GOARCH=wasm GO111MODULE=on CGO_ENABLED=0 go build -v -a -ldflags="-w -s" -gcflags=-trimpath="$(go env GOPATH)" -asmflags=-trimpath="$(go env GOPATH)" -o ../dist/shyexcel.wasm main.go
-        gzip -f --best ../distg/shyexcel.wasm
+        gzip -f --best ../dist/shyexcel.wasm
 
     - name: Setup Node.js
       uses: actions/setup-node@v3
