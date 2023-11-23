@@ -11,7 +11,15 @@
 </div>
 <script>
     function download() {
-        shyexcelWASM.NewTable('Book1.xlsx','./static/example.json').export();
+        var shyexcelOpts = {
+            method:'GET',
+            headers:{
+                'Authorization':'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJoYWliYW8ubXhiYy5uZXQiLCJzdWIiOiIxIiwiaWF0IjoxNzAwNjY1MTgxLCJleHAiOjE3MDMyNTcxODEsInR5cGUiOjksInVzZXJOYW1lIjoiYWRtaW5pIiwicmVnaW9uIjoyLCJjbk5hbWUiOiI1NjZoNTVDRzVaR1kifQ.g-Der7KlL-ASGglzy8s1dK9jSMF1bVSVUiPVEAbNoKHKQyKQ5-2XFA_H0f6oNxVKqmXo6Yy_1VMxaYL0Mgadcg'
+            },
+            responseType: 'json',  //默认json 可选属性，非必填
+            timeout: 1000*10  //请求超时时间
+        };
+        shyexcelWASM.NewTable('a.xlsx','http://127.0.0.1:8089/order/export/flash/excel',shyexcelOpts).export();
 
     }
     function a(){

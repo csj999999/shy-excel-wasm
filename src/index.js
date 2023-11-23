@@ -609,15 +609,17 @@ function NewTable(fileName,url,setting){
                 //处理数据 http 请求
                 let fetchOptions = {
                     method: _setting.method,
+                    headers : {}
                 };
                 if (_setting.headers !== null) {
-                    fetchOptions.headers = _setting.headers;
+                    fetchOptions.headers = common_extend(fetchOptions.headers,_setting.headers);
                 }
                 if ((_setting.method === 'POST' || _setting.method === 'post')  && _setting.reqData !== null) {
                     fetchOptions.body = _setting.reqData;
                 }
                 //TODO protubuf暂时不支持
-                let data = _setting.responseType === 'protubuf' ? null : fetch(url,fetchOptions).then(response=> response.json());
+                let data = _setting.responseType === 'protubuf' ? null :
+                    fetch(url,fetchOptions).then(response => response.json());
 
                 //接口返回的数据处理
                 data.then(data => _setting.data(data))
@@ -632,6 +634,8 @@ function NewTable(fileName,url,setting){
                             return;
                         }
                         //TODO excel生成成功，处理buffer
+
+
                         const link = document.createElement('a');
                         link.download = fileName === null || fileName === '' ? random()+".xlsx" : fileName;
                         link.href = URL.createObjectURL(
@@ -643,6 +647,7 @@ function NewTable(fileName,url,setting){
                     })
                     .catch((error) =>{
                         //处理异常
+                        console.error(error);
                         _setting.error({
 
                         })
