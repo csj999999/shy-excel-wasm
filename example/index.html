@@ -14,12 +14,12 @@
         var shyexcelOpts = {
             method:'GET',
             headers:{
-                'Authorization':'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJoYWliYW8ubXhiYy5uZXQiLCJzdWIiOiIxIiwiaWF0IjoxNzAwNjY1MTgxLCJleHAiOjE3MDMyNTcxODEsInR5cGUiOjksInVzZXJOYW1lIjoiYWRtaW5pIiwicmVnaW9uIjoyLCJjbk5hbWUiOiI1NjZoNTVDRzVaR1kifQ.g-Der7KlL-ASGglzy8s1dK9jSMF1bVSVUiPVEAbNoKHKQyKQ5-2XFA_H0f6oNxVKqmXo6Yy_1VMxaYL0Mgadcg'
+                'Authorization':'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJoYWliYW8ubXhiYy5uZXQiLCJzdWIiOiIxIiwiaWF0IjoxNzAwNzI0MjAwLCJleHAiOjE3MDMzMTYyMDAsInR5cGUiOjksInVzZXJOYW1lIjoiYWRtaW5pIiwicmVnaW9uIjoyLCJjbk5hbWUiOiIifQ.9gWOXZyVNADd4xXq0EN9uOL5kyIs-l3tQC9dgbvr0kAxG3HzjVITo6IMAq_sAPMELsbkD83bYirhKjRo87abXg'
             },
             responseType: 'json',  //默认json 可选属性，非必填
             timeout: 1000*10  //请求超时时间
         };
-        shyexcelWASM.NewTable('a.xlsx','http://127.0.0.1:8089/order/export/flash/excel',shyexcelOpts).export();
+        shyexcelWASM.NewTable('a.xlsx','https://posters-mgr.mxbc.net/api/order/export/flash/excel?pageNumber=1&pageSize=10&totalRow=2162&states=&shopCode=&orderNumber=&groupName=&saleType=0&preSellId=&startTime=2023-11-01&endTime=2023-11-02&supplierIds=&elist=false&source=0',shyexcelOpts).export();
 
     }
     function a(){
