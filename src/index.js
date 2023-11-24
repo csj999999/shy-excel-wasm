@@ -640,7 +640,7 @@ let _shyexcel = {
                     setTimeout(() => {
                         start('导出完成，可以点击下载', 2, buffer, this._fileName,'',_shyexcel)
                         this._status = 2
-                    }, 4000);
+                    }, 50);
                     //TODO excel生成成功，处理buffer
                     // const link = document.createElement('a');
                     // link.download = fileName === null || fileName === '' ? random()+".xlsx" : fileName;
@@ -682,6 +682,7 @@ function NewTable(fileName,url,setting){
     _shyexcel._fileName = fileName
     return _shyexcel
 }
+
 
 
 
