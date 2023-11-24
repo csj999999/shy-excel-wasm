@@ -568,6 +568,7 @@
 
 import pako from 'pako';
 import {common_extend,random} from "./util.js";
+import {start} from "./toast.js"
 
 const defaultSetting = {
     method:'GET',
@@ -592,7 +593,76 @@ const defaultSetting = {
     }
 };
 
+let _shyexcel = {
+    _status: 0,
+    _setting: null,
+    _fileName: null,
+    _url: '',
+    export: function (){
+        var startTime = new Date();
+        this._status = 1
+        //TODO 全局展示弹出层
+        start('正在导出....', 1,'','','', _shyexcel)
+        init(this._setting.wasm).then((shyexcel)=>{
 
+            //处理数据 http 请求
+            let fetchOptions = {
+                method: this._setting.method,
+            };
+            if (this._setting.headers !== null) {
+                fetchOptions.headers = this._setting.headers;
+            }
+            if ((this._setting.method === 'POST' || this._setting.method === 'post')  && this._setting.reqData !== null) {
+                fetchOptions.body = this._setting.reqData;
+            }
+            //TODO protubuf暂时不支持
+            let data = this._setting.responseType === 'protubuf' ? null : fetch(this._url,fetchOptions).then(response=> response.json());
+
+            //接口返回的数据处理
+            data.then(data => this._setting.data(data))
+                .then(data=>{
+                    const f = shyexcel.NewTable(data);
+                    const { buffer, error } = f.WriteToBuffer();
+                    if (error) {
+                        //处理异常
+                        this._setting.error({
+                            message : error.message
+                        })
+                        this._status = 0
+                        start('导出失败，点击查看原因', 3, '','',error.message,_shyexcel)
+                        return;
+                    }
+                    // var endTime = new Date();
+                    // var timeDiff = endTime - startTime;
+                    // timeDiff /= 1000;
+
+                    // console.log("Download time: " + timeDiff + " seconds");
+                    setTimeout(() => {
+                        start('导出完成，可以点击下载', 2, buffer, this._fileName,'',_shyexcel)
+                        this._status = 2
+                    }, 4000);
+                    //TODO excel生成成功，处理buffer
+                    // const link = document.createElement('a');
+                    // link.download = fileName === null || fileName === '' ? random()+".xlsx" : fileName;
+                    // link.href = URL.createObjectURL(
+                    //     new Blob([buffer], {
+                    //         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    //     })
+                    // );
+                    // link.click();
+                })
+                .catch((error) =>{
+                    //处理异常
+                    this._setting.error({
+
+                    })
+                    this._status = 0
+                    start('导出失败，点击查看原因', 3, '','',error.message,_shyexcel)
+                });
+
+        })
+    }
+}
 
 
 function NewTable(fileName,url,setting){
@@ -601,61 +671,16 @@ function NewTable(fileName,url,setting){
         console.error("url is null or '' ")
         return ;
     }
-    return {
-        export: function (){
-            //TODO 全局展示弹出层
-            init(_setting.wasm).then((shyexcel)=>{
-
-                //处理数据 http 请求
-                let fetchOptions = {
-                    method: _setting.method,
-                    headers : {}
-                };
-                if (_setting.headers !== null) {
-                    fetchOptions.headers = common_extend(fetchOptions.headers,_setting.headers);
-                }
-                if ((_setting.method === 'POST' || _setting.method === 'post')  && _setting.reqData !== null) {
-                    fetchOptions.body = _setting.reqData;
-                }
-                //TODO protubuf暂时不支持
-                let data = _setting.responseType === 'protubuf' ? null :
-                    fetch(url,fetchOptions).then(response => response.json());
-
-                //接口返回的数据处理
-                data.then(data => _setting.data(data))
-                    .then(data=>{
-                        const f = shyexcel.NewTable(data);
-                        const { buffer, error } = f.WriteToBuffer();
-                        if (error) {
-                            //处理异常
-                            _setting.error({
-                                message : error.message
-                            })
-                            return;
-                        }
-                        //TODO excel生成成功，处理buffer
-
-
-                        const link = document.createElement('a');
-                        link.download = fileName === null || fileName === '' ? random()+".xlsx" : fileName;
-                        link.href = URL.createObjectURL(
-                            new Blob([buffer], {
-                                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                            })
-                        );
-                        link.click();
-                    })
-                    .catch((error) =>{
-                        //处理异常
-                        console.error(error);
-                        _setting.error({
-
-                        })
-                    });
-
-            })
-        }
-    };
+    console.log(_shyexcel._status)
+    if (_shyexcel._status > 0){
+        //TODO 
+        return ;
+    }
+    _shyexcel._status = 0
+    _shyexcel._setting = _setting
+    _shyexcel._url = url
+    _shyexcel._fileName = fileName
+    return _shyexcel
 }
 
 
