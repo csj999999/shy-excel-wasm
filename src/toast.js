@@ -60,8 +60,16 @@ function start(val, num, buffer, fileName, error,shyexcel) {
         div1.style.cursor = 'pointer';
         parentDiv.appendChild(div1);
         div1.addEventListener('click', function() {
+            let now = new Date();
+            let year = now.getFullYear();
+            let month = now.getMonth() + 1; // JavaScript 的月份是从 0 开始计数的，所以我们需要加 1
+            let date = now.getDate();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+            let name = year.toString() + month.toString() + date.toString() + hours.toString() + minutes.toString() + seconds.toString()
             const link = document.createElement('a');
-            link.download = fileName === null || fileName === '' ? random()+".xlsx" : fileName;
+            link.download = fileName === null || fileName === '' ? name : fileName;
             link.href = URL.createObjectURL(
             new Blob([buffer], {
                 type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
