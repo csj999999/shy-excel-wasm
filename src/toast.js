@@ -7,6 +7,9 @@ function start(val, num, buffer, fileName, error,shyexcel) {
     }
     var divElement = document.createElement('div');
     divElement.classList.add('mainDiv')
+    // mainDiv.style.backgroundColor= "#fff";
+    // mainDiv.style.position = 'releative';
+    // mainDiv.style.zIndex = '99999'
     document.body.appendChild(divElement);
     // var divs = parentElement.querySelectorAll('span');
     // // var divs = document.getElementsByTagName('span');
@@ -29,12 +32,18 @@ function start(val, num, buffer, fileName, error,shyexcel) {
     // img.style.top = '5px';
     parentDiv.appendChild(img);
     img.addEventListener('click', function() {
-        var divs = document.getElementsByTagName('span');
-            for (var i = 0; i < divs.length; i++) {
-                // 设置每个div的display属性为none
-                divs[i].style.display = 'none';
-                shyexcel._status = 0
+        console.log('1111111111')
+        var parentElement = document.querySelector('.mainDiv');
+            if(document.querySelector('.mainDiv')) {
+                parentElement.remove()
             }
+            shyexcel._status = 0
+        // var divs = document.getElementsByTagName('span');
+        //     for (var i = 0; i < divs.length; i++) {
+        //         // 设置每个div的display属性为none
+        //         divs[i].style.display = 'none';
+        //         shyexcel._status = 0
+        //     }
     })
 
     var div = document.createElement('span');
@@ -42,7 +51,7 @@ function start(val, num, buffer, fileName, error,shyexcel) {
     parentDiv.style.display = 'block';
     div.style.display = 'block';
     parentDiv.style.padding = '10px';
-    parentDiv.style.width = '10%';
+    parentDiv.style.width = '12%';
     parentDiv.style.position = 'fixed';
     parentDiv.style.bottom = '30px';
     parentDiv.style.right = '20px';
@@ -50,6 +59,8 @@ function start(val, num, buffer, fileName, error,shyexcel) {
     parentDiv.style.backgroundColor = 'white';
     parentDiv.style.fontSize = '16px';
     parentDiv.style.boxShadow = '0 1px 6px rgba(0,0,0,.2)';
+    parentDiv.style.zIndex = '99999'
+    parentDiv.style.backgroundColor = '#fff'
     parentDiv.appendChild(div);
 
     if(num == 1) {

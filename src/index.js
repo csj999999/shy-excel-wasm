@@ -683,12 +683,6 @@ function NewTable(fileName,url,setting){
     return _shyexcel
 }
 
-
-
-
-
-
-
 async function init(wasmPath) {
     const go = new Go();
     var buffer;
