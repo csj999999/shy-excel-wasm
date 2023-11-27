@@ -177,11 +177,15 @@ func NewTable(this js.Value, args []js.Value) interface{} {
 			return nil
 		}
 		return regInteropFunc(shyexcel.NewTable(table, func(sheetIndex int, rowIndex int) {
-
+			processing(sheetIndex, rowIndex)
 		}), fn)
 	}
 	fn["error"] = "data is null"
 	return js.ValueOf(fn)
+}
+
+func processing(sheetIndex, rowIndex int) {
+
 }
 
 func NewHTTP(this js.Value, args []js.Value) interface{} {
