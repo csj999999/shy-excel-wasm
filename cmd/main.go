@@ -176,7 +176,9 @@ func NewTable(this js.Value, args []js.Value) interface{} {
 			fmt.Println("Error: " + err.Error())
 			return nil
 		}
-		return regInteropFunc(shyexcel.NewTable(table), fn)
+		return regInteropFunc(shyexcel.NewTable(table, func(sheetIndex int, rowIndex int) {
+
+		}), fn)
 	}
 	fn["error"] = "data is null"
 	return js.ValueOf(fn)
@@ -248,11 +250,14 @@ func newHttp(url string, headers map[string]string) (*excelize.File, error) {
 		if err != nil {
 			return nil, err
 		}
-		return shyexcel.NewTable(table), nil
+		return shyexcel.NewTable(table, func(sheetIndex int, rowIndex int) {
+
+		}), nil
 	case err := <-errc:
 		return nil, errors.New(err)
 	}
 }
+
 func WriteToBuffer(f *excelize.File) func(this js.Value, args []js.Value) interface{} {
 	return func(this js.Value, args []js.Value) interface{} {
 		ret := map[string]interface{}{"buffer": js.ValueOf([]interface{}{}), "error": nil}

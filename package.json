@@ -1,6 +1,6 @@
 {
   "name": "shy-excel-wasm",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A pure WebAssembly / Javascript port of Go Excelize library",
   "type": "module",
   "main": "main.cjs",
