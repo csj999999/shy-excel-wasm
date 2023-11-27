@@ -16,7 +16,7 @@ require (
 )
 
 require (
-	github.com/buzzxu/shy-excel v0.1.0
+	github.com/buzzxu/shy-excel v0.0.9
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 // indirect
 	github.com/richardlehane/mscfb v1.0.4 // indirect
 	github.com/richardlehane/msoleps v1.0.3 // indirect
