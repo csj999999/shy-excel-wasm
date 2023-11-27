@@ -14,70 +14,23 @@
         var shyexcelOpts = {
             method:'GET',
             headers:{
-                'Authorization':'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJoYWliYW8ubXhiYy5uZXQiLCJzdWIiOiIzNjc2MiIsImlhdCI6MTcwMTA0OTEwOSwiZXhwIjoxNzAzNjQxMTA5LCJ0eXBlIjoyLCJ1c2VyTmFtZSI6ImRldmVsb3BlciIsInJlZ2lvbiI6MiwiY25OYW1lIjoiNWJ5QTVZK1I1cldMNksrViJ9.k6cKO6jBJzfjjgOMy3hZivv5DXPCqRYUHumIpj4ijThrj-h1bByJkCshgLcOF5-OTHiy5MT7wcJwVveJla1iYg'
+                'Authorization':'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJoYWliYW8ubXhiYy5uZXQiLCJzdWIiOiIxIiwiaWF0IjoxNzAxMDk1NjAwLCJleHAiOjE3MDM2ODc2MDAsInR5cGUiOjksInVzZXJOYW1lIjoiYWRtaW5pIiwicmVnaW9uIjoyLCJjbk5hbWUiOiIifQ.e4eXiHV0I2E-LMFUbfMWF7j35urE-SBjNf8T5KPrxoBQ7kdRJB_v42d6goLf9jLEYTHV-fzKdBYTQst_XbAlIg'
             },
-            responseType: 'json',  //默认json 可选属性，非必填
-            timeout: 1000*10  //请求超时时间
-        };
-        shyexcelWASM.NewTable('a.xlsx','https://posters-mgr.mxbc.net/api/order/export/flash/excel?pageNumber=1&pageSize=10&totalRow=2162&states=&shopCode=&orderNumber=&groupName=&saleType=0&preSellId=&startTime=2023-11-01&endTime=2023-11-02&supplierIds=&elist=false&source=0',shyexcelOpts).export();
-
-    }
-    function a(){
-        //简单导出
-        shyexcelWASM.NewTable('./static/example.json').export()
-        //另一种形式
-        var shyexcelOpts = {
-            method:'GET',
-            responseType: 'json',  //默认json 可选属性，非必填
-            timeout: 1000*10  //请求超时时间
-        };
-        shyexcelWASM.NewTable('./static/example.json',shyexcelOpts).export();
-        //自定义header
-        var shyexcelOpts = {
-            method:'GET',
-            responseType: 'json',  //默认json 可选属性，非必填
-            headers: {
-                'Content-Type':'application/json'
-            }
-        };
-        shyexcelWASM.NewTable('./static/example.json',shyexcelOpts).export();
-        //POST 请求带参数
-        var shyexcelOpts = {
-            method:'POST',
-            responseType: 'json',
-            data: {
-                keywords: '关键词'
-            }
-        };
-        shyexcelWASM.NewTable('./static/example.json',shyexcelOpts).export();
-        //自定义提示语
-        var shyexcelOpts = {
-            method:'POST',
-            responseType: 'json',
-            tips: {
-                normal:'正在生成中,请勿刷新页面',
-                error:'生成失败,请点击查看详情',
-                success: '文件生成成功,请及时下载'
-            },
-        };
-        shyexcelWASM.NewTable('./static/example.json',shyexcelOpts).export();
-        //接口数据自定义 异常处理
-        var shyexcelOpts = {
-            method:'GET',
             responseType: 'json',  //默认json 可选属性，非必填
             timeout: 1000*10,  //请求超时时间
-            success: (response)=>{
-              return  response.data;
-            },
-            error: (response)=>{
-               if (response.status === 500){
-                   return response.data.message
-               }
-               return "接口发生异常"
-            }
         };
-        shyexcelWASM.NewTable('./static/example.json',shyexcelOpts).export()
+        try {
+            shyexcelWASM.NewTable(shyexcelOpts).export('a.xlsx','https://posters-mgr.mxbc.net/api/order/export/flash/excel',{
+                startTime:'2023-11-01',
+                endTime:'2023-11-02'
+            });
+        }catch (error){
+            console.error(error)
+        }
+
+
     }
+
 </script>
 </body>
 </html>

@@ -167,7 +167,7 @@ func NewTable(this js.Value, args []js.Value) interface{} {
 	fn := map[string]interface{}{"error": nil}
 	fn["error"] = nil
 
-	if len(args) == 1 {
+	if len(args) > 1 {
 		jsonStr := js.Global().Get("JSON").Call("stringify", args[0]).String()
 		var json = jsoniter.ConfigCompatibleWithStandardLibrary
 		var table = &shyexcel.Table{}
@@ -176,16 +176,23 @@ func NewTable(this js.Value, args []js.Value) interface{} {
 			fmt.Println("Error: " + err.Error())
 			return nil
 		}
-		return regInteropFunc(shyexcel.NewTable(table, func(sheetIndex int, rowIndex int) {
-			processing(sheetIndex, rowIndex)
-		}), fn)
+		if len(args) == 2 {
+			callback := args[1]
+			if callback.Type() != js.TypeFunction {
+				fn["error"] = "args[1] callback function is missing or not a function"
+				return js.ValueOf(fn)
+			}
+			return regInteropFunc(shyexcel.NewTable(table, func(sheetIndex int, rowIndex int) {
+				callback.Invoke(js.ValueOf(sheetIndex), js.ValueOf(rowIndex))
+			}), fn)
+		} else {
+			return regInteropFunc(shyexcel.NewTable(table, func(sheetIndex int, rowIndex int) {
+				//nothing to do
+			}), fn)
+		}
 	}
 	fn["error"] = "data is null"
 	return js.ValueOf(fn)
-}
-
-func processing(sheetIndex, rowIndex int) {
-
 }
 
 func NewHTTP(this js.Value, args []js.Value) interface{} {
