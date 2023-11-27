@@ -12,10 +12,6 @@ github.com/buzzxu/shy-excel v0.0.8 h1:ACBLsjbYUc9C+woBVwRxsc74fuFIKhXFsra05qInbA
 github.com/buzzxu/shy-excel v0.0.8/go.mod h1:gG986xBZSuipFLbGiPoLQD63Tv0Tq+sSdxd0/HAB4so=
 github.com/buzzxu/shy-excel v0.0.9 h1:4arJdm0RrZDF8AL2Ul5ePdcmRWXNS83L2VH2cwZe6Yo=
 github.com/buzzxu/shy-excel v0.0.9/go.mod h1:gG986xBZSuipFLbGiPoLQD63Tv0Tq+sSdxd0/HAB4so=
-github.com/buzzxu/shy-excel v0.0.10 h1:yRNKuJmls7E90pe3xUoJ1ZeXDlZ2hlN8E89R7jJPruk=
-github.com/buzzxu/shy-excel v0.0.10/go.mod h1:8tGW6M6C1alWKMm2yevg6YztyYfeEpLBIWcV0pYTuJw=
-github.com/buzzxu/shy-excel v0.1.0 h1:/WDIk7z8uzn+sDg5VR6B9aauIHgP78WbTZeFs30xkDM=
-github.com/buzzxu/shy-excel v0.1.0/go.mod h1:8tGW6M6C1alWKMm2yevg6YztyYfeEpLBIWcV0pYTuJw=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/M65Eg=
