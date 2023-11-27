@@ -16,7 +16,7 @@ function start(val, num, buffer, fileName, error,shyexcel) {
     var parentDiv = document.createElement('span');
     divElement.appendChild(parentDiv);
     var img = document.createElement('img');
-    img.src = '../example/static/del.png';
+    img.src = '../images/del.png';
     img.style.width = '14px';
     img.style.height = '14px';
     img.style.position = "absolute"; // 设置为绝对定位
@@ -52,7 +52,7 @@ function start(val, num, buffer, fileName, error,shyexcel) {
 
     if(num == 1) {
         var loadimg = document.createElement('img');
-        loadimg.src = '../example/static/loadingProgress.gif';
+        loadimg.src = '../images/loadingProgress.gif';
         loadimg.style.marginTop = '10px';
         loadimg.style.width = '80%';
         loadimg.style.height = '10px';
