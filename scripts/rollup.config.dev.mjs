@@ -4,6 +4,7 @@ import serve from 'rollup-plugin-serve';
 const input = './src/index.js';
 import baseConfig from './rollup.config.mjs';
 import resolve from "@rollup/plugin-node-resolve";
+import image from "@rollup/plugin-image";
 export default [
     ...baseConfig,
     {
@@ -15,6 +16,7 @@ export default [
             sourcemap: false,
         },
         plugins: [
+            image(),
             resolve({
                 // 将自定义选项传递给解析插件
                 moduleDirectories: ['node_modules']

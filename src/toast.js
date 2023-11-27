@@ -1,3 +1,5 @@
+import _img_del from './assets/del.png';
+import _img_loading from './assets/loadingProgress.gif';
 function start(val, num, buffer, fileName, error,shyexcel) {
     var parentElement = document.querySelector('.mainDiv');
     if(document.querySelector('.mainDiv')) {
@@ -16,7 +18,7 @@ function start(val, num, buffer, fileName, error,shyexcel) {
     var parentDiv = document.createElement('span');
     divElement.appendChild(parentDiv);
     var img = document.createElement('img');
-    img.src = '../images/del.png';
+    img.src = _img_del;
     img.style.width = '14px';
     img.style.height = '14px';
     img.style.position = "absolute"; // 设置为绝对定位
@@ -52,7 +54,7 @@ function start(val, num, buffer, fileName, error,shyexcel) {
 
     if(num == 1) {
         var loadimg = document.createElement('img');
-        loadimg.src = '../images/loadingProgress.gif';
+        loadimg.src = _img_loading;
         loadimg.style.marginTop = '10px';
         loadimg.style.width = '80%';
         loadimg.style.height = '10px';
