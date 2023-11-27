@@ -57,4 +57,5 @@ jobs:
         npm install
         node ./node_modules/.bin/rollup -c scripts/rollup.config.prod.mjs
         cp README.md ./dist
+        cp -r images/ ./dist
         cp src/package.json ./dist

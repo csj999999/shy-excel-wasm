@@ -1,13 +1,10 @@
 {
   "name": "shy-excel-wasm",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A pure WebAssembly / Javascript port of Go Excelize library",
   "type": "module",
   "main": "main.cjs",
   "module": "main.js",
-  "files": [
-    "images"
-  ],
   "scripts": {
     "clean": "rimraf dist",
     "dev": "yarn run clean && cross-env NODE_ENV=development rollup -w -c scripts/rollup.config.dev.mjs",

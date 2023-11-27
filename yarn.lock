@@ -71,6 +71,14 @@
     "is-reference" "1.2.1"
     "magic-string" "^0.30.3"
 
+"@rollup/plugin-image@^3.0.3":
+  "integrity" "sha512-qXWQwsXpvD4trSb8PeFPFajp8JLpRtqqOeNYRUKnEQNHm7e5UP7fuSRcbjQAJ7wDZBbnJvSdY5ujNBQd9B1iFg=="
+  "resolved" "https://registry.npmjs.org/@rollup/plugin-image/-/plugin-image-3.0.3.tgz"
+  "version" "3.0.3"
+  dependencies:
+    "@rollup/pluginutils" "^5.0.1"
+    "mini-svg-data-uri" "^1.4.4"
+
 "@rollup/plugin-inject@^5.0.1":
   "integrity" "sha512-2+DEJbNBoPROPkgTDNe8/1YXWcqxbN5DTjASVIOx8HS+pITXushyNiBV56RB08zuptzz8gT3YfkqriTBVycepg=="
   "resolved" "https://registry.npmmirror.com/@rollup/plugin-inject/-/plugin-inject-5.0.5.tgz"
@@ -100,6 +108,15 @@
     "serialize-javascript" "^6.0.1"
     "smob" "^1.0.0"
     "terser" "^5.17.4"
+
+"@rollup/plugin-url@^8.0.2":
+  "integrity" "sha512-5yW2LP5NBEgkvIRSSEdJkmxe5cUNZKG3eenKtfJvSkxVm/xTTu7w+ayBtNwhozl1ZnTUCU0xFaRQR+cBl2H7TQ=="
+  "resolved" "https://registry.npmjs.org/@rollup/plugin-url/-/plugin-url-8.0.2.tgz"
+  "version" "8.0.2"
+  dependencies:
+    "@rollup/pluginutils" "^5.0.1"
+    "make-dir" "^3.1.0"
+    "mime" "^3.0.0"
 
 "@rollup/pluginutils@^5.0.1":
   "integrity" "sha512-6aEYR910NyP73oHiJglti74iRyOwgFU4x3meH/H8OJx6Ry0j6cOVZ5X/wTvub7G7Ao6qaHBEaNsV3GLJkSsF+Q=="
@@ -191,14 +208,7 @@
   "resolved" "https://registry.npmmirror.com/commondir/-/commondir-1.0.1.tgz"
   "version" "1.0.1"
 
-"cross-env@^7.0.3":
-  "integrity" "sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw=="
-  "resolved" "https://registry.npmmirror.com/cross-env/-/cross-env-7.0.3.tgz"
-  "version" "7.0.3"
-  dependencies:
-    "cross-spawn" "^7.0.1"
-
-"cross-spawn@^7.0.0", "cross-spawn@^7.0.1":
+"cross-spawn@^7.0.0":
   "integrity" "sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w=="
   "resolved" "https://registry.npmmirror.com/cross-spawn/-/cross-spawn-7.0.3.tgz"
   "version" "7.0.3"
@@ -349,10 +359,22 @@
   dependencies:
     "@jridgewell/sourcemap-codec" "^1.4.15"
 
-"mime@>=2.4.6":
+"make-dir@^3.1.0":
+  "integrity" "sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw=="
+  "resolved" "https://registry.npmjs.org/make-dir/-/make-dir-3.1.0.tgz"
+  "version" "3.1.0"
+  dependencies:
+    "semver" "^6.0.0"
+
+"mime@^3.0.0", "mime@>=2.4.6":
   "integrity" "sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A=="
   "resolved" "https://registry.npmmirror.com/mime/-/mime-3.0.0.tgz"
   "version" "3.0.0"
+
+"mini-svg-data-uri@^1.4.4":
+  "integrity" "sha512-r9deDe9p5FJUPZAk3A59wGH7Ii9YrjjWw0jmw/liSbHl2CHiyXj6FcDXDu2K3TjVAXqiJdaw3xxwlZZr9E6nHg=="
+  "resolved" "https://registry.npmjs.org/mini-svg-data-uri/-/mini-svg-data-uri-1.4.4.tgz"
+  "version" "1.4.4"
 
 "minimatch@^5.0.1":
   "integrity" "sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g=="
@@ -463,6 +485,11 @@
   "resolved" "https://registry.npmmirror.com/safe-buffer/-/safe-buffer-5.2.1.tgz"
   "version" "5.2.1"
 
+"semver@^6.0.0":
+  "integrity" "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA=="
+  "resolved" "https://registry.npmjs.org/semver/-/semver-6.3.1.tgz"
+  "version" "6.3.1"
+
 "serialize-javascript@^6.0.1":
   "integrity" "sha512-owoXEFjWRllis8/M1Q+Cw5k8ZH40e3zhp/ovX+Xr/vi1qj6QesbyXXViFbpNvWvPNAD62SutwEXavefrLJWj7w=="
   "resolved" "https://registry.npmmirror.com/serialize-javascript/-/serialize-javascript-6.0.1.tgz"
@@ -482,10 +509,10 @@
   "resolved" "https://registry.npmmirror.com/shebang-regex/-/shebang-regex-3.0.0.tgz"
   "version" "3.0.0"
 
-"shy-excel-wasm@^0.0.5":
-  "integrity" "sha512-0Gn/OrnZ4o1vfRoWwTvsJeeZVE79lfV8k+jA4RyuHVBLEfEaHHdUmgzI83ceeoHT9h9dVulBDSACmJ6RsOBVEQ=="
-  "resolved" "https://registry.npmmirror.com/shy-excel-wasm/-/shy-excel-wasm-0.0.5.tgz"
-  "version" "0.0.5"
+"shy-excel-wasm@^0.0.7":
+  "integrity" "sha512-KhI79wdLslmwOWJsy7C8LXI/5YPH2TMW35PBq2ME8Ndqk8O4aW2sYmDv3xC5lVtDfzqlPZl79okngkfGKjTyQw=="
+  "resolved" "https://registry.npmjs.org/shy-excel-wasm/-/shy-excel-wasm-0.0.7.tgz"
+  "version" "0.0.7"
 
 "signal-exit@^4.0.1":
   "integrity" "sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw=="
@@ -521,7 +548,7 @@
 
 "string-width@^4.1.0":
   "integrity" "sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g=="
-  "resolved" "https://registry.npmmirror.com/string-width/-/string-width-4.2.3.tgz"
+  "resolved" "https://registry.npmjs.org/string-width/-/string-width-4.2.3.tgz"
   "version" "4.2.3"
   dependencies:
     "emoji-regex" "^8.0.0"
@@ -546,7 +573,7 @@
 
 "strip-ansi@^6.0.0", "strip-ansi@^6.0.1":
   "integrity" "sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A=="
-  "resolved" "https://registry.npmmirror.com/strip-ansi/-/strip-ansi-6.0.1.tgz"
+  "resolved" "https://registry.npmjs.org/strip-ansi/-/strip-ansi-6.0.1.tgz"
   "version" "6.0.1"
   dependencies:
     "ansi-regex" "^5.0.1"

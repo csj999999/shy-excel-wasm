@@ -53,8 +53,8 @@ jobs:
       run: |
         npm install
         node ./node_modules/.bin/rollup -c scripts/rollup.config.prod.mjs
-        cp README.md ./dist
         cp src/package.json ./dist
+        cp README.md ./dist
 
     - name: NPM Publish
       uses: JS-DevTools/npm-publish@v2
