@@ -1,12 +1,20 @@
 function start(val, num, buffer, fileName, error,shyexcel) {
-    var divs = document.getElementsByTagName('span');
-    for (var i = 0; i < divs.length; i++) {
-        // 设置每个div的display属性为none
-        // divs[i].style.display = 'none';
-        divs[i].remove()
+    var parentElement = document.querySelector('.mainDiv');
+    if(document.querySelector('.mainDiv')) {
+        parentElement.remove()
     }
+    var divElement = document.createElement('div');
+    divElement.classList.add('mainDiv')
+    document.body.appendChild(divElement);
+    // var divs = parentElement.querySelectorAll('span');
+    // // var divs = document.getElementsByTagName('span');
+    // for (var i = 0; i < divs.length; i++) {
+    //     // 设置每个div的display属性为none
+    //     // divs[i].style.display = 'none';
+    //     divs[i].remove()
+    // }
     var parentDiv = document.createElement('span');
-
+    divElement.appendChild(parentDiv);
     var img = document.createElement('img');
     img.src = '../example/static/del.png';
     img.style.width = '14px';
@@ -76,13 +84,17 @@ function start(val, num, buffer, fileName, error,shyexcel) {
             })
             );
             link.click();
-            
-            var divs = document.getElementsByTagName('span');
-            for (var i = 0; i < divs.length; i++) {
-                // 设置每个div的display属性为none
-                divs[i].style.display = 'none';
-                shyexcel._status = 0
+            var parentElement = document.querySelector('.mainDiv');
+            if(document.querySelector('.mainDiv')) {
+                parentElement.remove()
             }
+            shyexcel._status = 0
+            // var divs = document.getElementsByTagName('span');
+            // for (var i = 0; i < divs.length; i++) {
+            //     // 设置每个div的display属性为none
+            //     divs[i].style.display = 'none';
+            //     shyexcel._status = 0
+            // }
             // div.style.display = 'none';
             // div1.style.display = 'none';
         });
@@ -106,7 +118,7 @@ function start(val, num, buffer, fileName, error,shyexcel) {
             parentDiv.appendChild(div2);
         });
     }
-    document.body.appendChild(parentDiv);
+    document.body.appendChild(divElement);
 }
 export {
     start
