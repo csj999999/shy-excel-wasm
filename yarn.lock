@@ -219,7 +219,7 @@ cross-spawn@^7.0.0:
 
 deepmerge@^4.2.2:
   version "4.3.1"
-  resolved "https://registry.npmmirror.com/deepmerge/-/deepmerge-4.3.1.tgz"
+  resolved "https://registry.npmjs.org/deepmerge/-/deepmerge-4.3.1.tgz"
   integrity sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==
 
 eastasianwidth@^0.2.0:
@@ -516,7 +516,7 @@ shebang-regex@^3.0.0:
 
 shy-excel-wasm@^0.0.8:
   version "0.0.8"
-  resolved "https://registry.yarnpkg.com/shy-excel-wasm/-/shy-excel-wasm-0.0.8.tgz#b041abe2d714912851aa5e7fe616f607a3bd7046"
+  resolved "https://registry.npmjs.org/shy-excel-wasm/-/shy-excel-wasm-0.0.8.tgz"
   integrity sha512-sYtFQ4UP7U+ScBrjq7MZZp+foqMEJgMxSa5/Gbok8AYESehXkt7KKr+P7NJR0DXqfhI0L1oLNdWsypVwhYRDUw==
 
 signal-exit@^4.0.1:

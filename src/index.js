@@ -567,9 +567,8 @@
 };*/
 
 import pako from 'pako';
-import {common_extend,random} from "./util.js";
+import {common_extend,deepMerge,random} from "./util.js";
 import {start} from "./toast.js"
-
 const defaultSetting = {
     method:'GET',
     responseType: 'json',
@@ -587,6 +586,10 @@ const defaultSetting = {
     }
 };
 
+let shyexcelInstance = null;
+
+
+
 let _shyexcel = {
     _status: 0,
     _setting: null,
@@ -597,11 +600,16 @@ let _shyexcel = {
             this._status = 1
             start(this._setting.tips.normal, 1,'','','', _shyexcel)
             const _data = typeof urlOrData === 'string' ? fetchData(urlOrData, params,this._setting) : Promise.resolve(urlOrData);
-            const shyexcel = await init(this._setting.wasm);
+            if (!shyexcelInstance) { // 新增：只在第一次调用时初始化 WebAssembly 模块
+                shyexcelInstance = await init(this._setting.wasm);
+            }
             let data = await _data;
-            const f = shyexcel.NewTable(data,(sheetIndex,rowIndex)=>{
-                let sheet = data.sheets[sheetIndex];
-                console.info(`表格: ${sheet.name},${rowIndex+1}/${sheet.data.length}`)
+            if (data.error) { // 检查数据是否包含错误
+                this.handleError(data.error);
+                return;
+            }
+            const f = shyexcelInstance.NewTable(data,(_data)=>{
+                //
             });
             const { buffer, error } = f.WriteToBuffer();
             if (error) {
@@ -614,6 +622,8 @@ let _shyexcel = {
             }, 50);
         } catch (error) {
             this.handleError(error);
+        } finally {
+            this._status = 0;
         }
     },
     handleError: function (error) {
@@ -625,7 +635,7 @@ let _shyexcel = {
 }
 
 function NewTable(setting){
-    let _setting = setting === undefined || setting === null? defaultSetting : common_extend(defaultSetting, setting);
+    let _setting = setting === undefined || setting === null? defaultSetting : deepMerge(defaultSetting, setting);
     _shyexcel._status = 0;
     _shyexcel._setting = _setting;
     return _shyexcel;

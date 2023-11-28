@@ -183,7 +183,9 @@ func NewTable(this js.Value, args []js.Value) interface{} {
 				return js.ValueOf(fn)
 			}
 			return regInteropFunc(shyexcel.NewTable(table, func(sheetIndex int, rowIndex int) {
-				callback.Invoke(js.ValueOf(sheetIndex), js.ValueOf(rowIndex))
+				sheet := table.Sheets[sheetIndex]
+				sheetName := sheet.Name
+				callback.Invoke(js.ValueOf(map[string]interface{}{"sheet": sheetIndex, "current": rowIndex, "sheetName": sheetName, "total": len(*sheet.Data)}))
 			}), fn)
 		} else {
 			return regInteropFunc(shyexcel.NewTable(table, func(sheetIndex int, rowIndex int) {

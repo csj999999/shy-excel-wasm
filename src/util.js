@@ -18,6 +18,28 @@ function common_extend(obj1, obj2) {
     return ret;
 }
 
+function deepMerge(target, source) {
+    if (typeof target !== 'object' || target === null) {
+        target = {};
+    }
+    if (typeof source !== 'object' || source === null) {
+        source = {};
+    }
+
+    for (const key in source) {
+        if (source.hasOwnProperty(key)) {
+            const value = source[key];
+            if (typeof value !== 'object' || value === null) {
+                target[key] = value;
+            } else {
+                target[key] = deepMerge(target[key], value);
+            }
+        }
+    }
+
+    return target;
+}
+
 function random() {
     // 获取当前日期和时间并转换为字符串格式
     var dateTime = new Date().toISOString().replace(/[-T:.Z]/g, '');
@@ -35,5 +57,6 @@ function random() {
 
 export {
     common_extend,
+    deepMerge,
     random
 }
