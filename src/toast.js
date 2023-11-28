@@ -32,7 +32,7 @@ function start(val, num, buffer, fileName, error,shyexcel) {
     // img.style.top = '5px';
     parentDiv.appendChild(img);
     img.addEventListener('click', function() {
-        console.log('1111111111')
+        // console.log('1111111111')
         var parentElement = document.querySelector('.mainDiv');
             if(document.querySelector('.mainDiv')) {
                 parentElement.remove()
