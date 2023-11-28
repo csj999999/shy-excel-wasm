@@ -3,15 +3,9 @@ import resolve from '@rollup/plugin-node-resolve';
 import nodePolyfills from 'rollup-plugin-polyfill-node';
 import commonjs from '@rollup/plugin-commonjs';
 import terser from '@rollup/plugin-terser';
-import url from '@rollup/plugin-url';
 import image from '@rollup/plugin-image';
 import pkg from '../package.json' assert {type: 'json'};
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
 const input = './src/index.js';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const srcPath = join(__dirname, 'src');
 export default [
     {
         input,
